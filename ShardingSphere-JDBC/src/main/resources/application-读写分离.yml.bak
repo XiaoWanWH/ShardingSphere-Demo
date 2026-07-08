@@ -1,0 +1,70 @@
+spring:
+  application:
+    # 应用名称
+    name: sharging-jdbc-demo
+  profiles:
+    # 开发环境设置
+    active: dev
+  shardingsphere:
+    mode:
+      # 内存模式
+      type: Memory
+
+    props:
+      # 打印SQl
+      sql-show: true
+
+    datasource:
+      # 配置真实数据源
+      names: server-master,server-slave0,server-slave1
+
+      # 配置主库数据源
+      server-master:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://192.168.56.10:3310/db_user
+        username: root
+        password: 123456
+
+      # 配置从库0数据源
+      server-slave0:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://192.168.56.10:3311/db_user
+        username: root
+        password: 123456
+
+      # 配置从库1数据源
+      server-slave1:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://192.168.56.10:3312/db_user
+        username: root
+        password: 123456
+
+    rules:
+      # 读写分离
+      readwrite-splitting:
+        data-sources:
+          # 逻辑库名，主从数据库共同构成myds
+          myds:
+            # 读写分离类型，静态类型主从角色固定
+            type: Static
+            props:
+              write-data-source-name: server-master
+              read-data-source-names: server-slave0,server-slave1
+            # 负载均衡算法名称
+            loadBalancerName: alg_weight
+        load-balancers:
+          alg_round:
+            # 负载均衡算法类型，轮询算法
+            type: ROUND_ROBIN
+          alg_random:
+            # 负载均衡算法类型，随机算法
+            type: RANDOM
+          alg_weight:
+            # 负载均衡算法类型，权重算法
+            type: WEIGHT
+            props:
+              server-slave0: 1
+              server-slave1: 2

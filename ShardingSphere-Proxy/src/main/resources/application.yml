@@ -1,4 +1,4 @@
-#mybatis??
+# mybatis-plus sql日志
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
@@ -7,8 +7,11 @@ spring:
     name: sharding-proxy-demo
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    password: root
-    url: jdbc:mysql://192.168.120.20:3321/readwrite_splitting_db?serverTimezone=GMT%2B8&useSSL=false
+    # 测试读写分离
+    # url: jdbc:mysql://192.168.56.10:3327/readwrite_splitting_db?serverTimezone=GMT%2B8&useSSL=false
+    # 测试分库分表
+    url: jdbc:mysql://192.168.56.10:3327/sharding_db?serverTimezone=GMT%2B8&useSSL=false
     username: root
+    password: root
   profiles:
     active: dev

@@ -1,0 +1,46 @@
+spring:
+  application:
+    # 应用名称
+    name: sharging-jdbc-demo
+  profiles:
+    # 开发环境设置
+    active: dev
+  shardingsphere:
+    mode:
+      # 内存模式
+      type: Memory
+
+    props:
+      # 打印SQl
+      sql-show: true
+
+    datasource:
+      # 配置真实数据源
+      names: server-user,server-order
+
+      # 用户库
+      server-user:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://192.168.56.10:3320/db_user
+        username: root
+        password: 123456
+
+      # 订单库
+      server-order:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://192.168.56.10:3321/db_order
+        username: root
+        password: 123456
+
+    rules:
+      # 数据分片
+      sharding:
+        tables:
+          # 逻辑表名
+          t_user:
+            # 逻辑表映射真实数据节点
+            actual-data-nodes: server-user.t_user
+          t_order:
+            actual-data-nodes: server-order.t_order
