@@ -1,8 +1,3 @@
----
-typora-copy-images-to: assets
-typora-root-url: assets
----
-
 # 第01章 高性能架构模式
 
 - 应对海量用户访问，分散读写压力 —— 读写分离
